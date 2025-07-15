@@ -1,0 +1,56 @@
+/* Language Specific Styles for RTL */
+html[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
+
+html[dir="ltr"] {
+    direction: ltr;
+    text-align: left;
+}
+
+/* Specific adjustments for RTL layout if needed */
+/* For example, adjusting margins/paddings that were hardcoded for LTR */
+html[dir="rtl"] .navbar-nav .nav-link {
+    /* Example: if you had specific margin-left that now needs to be margin-right */
+    /* margin-left: 0 !important; */
+    /* margin-right: some-value; */
+}
+
+/* Adjustments for right positioning of elements like language switcher itself */
+html[dir="rtl"] .language-switcher {
+    right: auto; /* Revert default Bootstrap positioning if any */
+    left: 20px;  /* Position on the left for RTL */
+}
+/* If your Bootstrap template uses flexbox for nav, you might need to adjust justify-content */
+html[dir="rtl"] .navbar-collapse .navbar-nav.mx-auto {
+    /* If you need to push elements to the right for RTL */
+    /* margin-left: auto !important; */
+    /* margin-right: 0 !important; */
+}
+
+/* Example for the join us button, if it's floated right in LTR */
+html[dir="rtl"] .btn.d-lg-block {
+    /* float: left; /* if it was floated right */
+}
+
+/* Adjustments for icons in RTL, e.g., if a right arrow should point left */
+html[dir="rtl"] .fa.fa-arrow-right.ms-3 {
+    transform: scaleX(-1); /* Flip horizontally */
+    margin-left: 0 !important; /* Remove ms-3 margin */
+    margin-right: 0.5rem !important; /* Add margin to the left */
+}
+
+/* Adjustments for the quote icon in testimonials */
+html[dir="rtl"] .testimonial-item .fa.fa-quote-right {
+    transform: scaleX(-1);
+    margin-right: auto; /* Push it to the left */
+    margin-left: 0;
+}
+
+/* Adjustments for border-radius on testimonial item if it was 50px 0 0 50px */
+html[dir="rtl"] .testimonial-item .d-flex.align-items-center {
+    border-radius: 0 50px 50px 0 !important; /* Flip the border-radius */
+    margin-right: 0;
+    margin-left: -20px; /* Adjust margin if needed */
+}
