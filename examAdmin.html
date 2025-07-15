@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="examManagementTitle">Exam Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        :root {
+            --primary: #ff8c00; /* Orange */
+            --primary-light: #FFA000; /* Lighter Orange */
+            --primary-dark: #CC7000; /* Darker Orange */
+            --secondary: #FFD166; /* Light Yellow */
+
+            --bg-color: #F0F4FF; /* Light background */
+            --container-bg: #ffffff; /* White container */
+            --text-color: #292929; /* Dark text */
+            --gray: #e0e0e0; /* Border/separator */
+            --question-bg: #ffffff; /* Question card background */
+            --table-bg: #ffffff; /* Table background */
+            --table-even-bg: #F0F4FF; /* Light even row */
+            --input-bg: #ffffff; /* Input background */
+            --border-color: rgba(255, 140, 0, 0.2); /* Primary based border */
+
+            --green-btn: #4CAF50;
+            --red-btn: #F44336;
+            --blue-btn: #2196F3;
+        }
+
+        .dark-mode {
+            --primary: #FFA000; /* Slightly brighter orange for dark mode accent */
+            --primary-light: #FF8C00;
+            --primary-dark: #CC7000;
+            --secondary: #FFD166;
+
+            --bg-color: #2c3e50; /* Dark background */
+            --container-bg: #34495e; /* Darker container */
+            --text-color: #ecf0f1; /* Light text */
+            --gray: #4a657f; /* Dark border/separator */
+            --question-bg: #34495e; /* Dark question card background */
+            --table-bg: #34495e; /* Dark table background */
+            --table-even-bg: #2c3e50; /* Dark even row */
+            --input-bg: #34495e; /* Dark input background */
+            --border-color: rgba(255, 140, 0, 0.3); /* Primary based border */
+
+            --green-btn: #66bb6a;
+            --red-btn: #ef5350;
+            --blue-btn: #42a5f5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 1rem;
+            background-image: radial-gradient(circle at 10% 20%, rgba(255,160,0,0.05) 0%, rgba(255,140,0,0.02) 90%);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode body {
+            background-image: radial-gradient(circle at 10% 20%, rgba(52, 73, 94, 0.08) 0%, rgba(44, 62, 80, 0.04) 90%);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+                border-radius: 12px;
+            }
+        }
+
+        .container:hover {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            font-size: 1.75rem;
+        }
+
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        label {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+            display: block;
+            font-size: 1rem;
+        }
+
+        input, textarea {
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            border: 2px solid var(--gray); /* Changed from #eee */
+            width: 100%;
+            margin-bottom: 1.2rem;
+            font-size: 1rem;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        @media (max-width: 480px) {
+            input, textarea {
+                padding: 0.7rem 0.9rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.2); /* Updated primary color rgba */
+        }
+
+        .question {
+            background: var(--question-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .question {
+                padding: 1rem;
+            }
+        }
+
+        .question:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border-color: var(--border-color);
+        }
+
+        .question:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3); /* Updated primary color rgba */
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (max-width: 480px) {
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.4); /* Updated primary color rgba */
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover:after {
+            opacity: 1;
+        }
+
+        .remove-btn {
+            background: linear-gradient(135deg, var(--red-btn), #FF7676); /* Using red-btn variable */
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3); /* Updated rgba for red */
+        }
+
+        .remove-btn:hover {
+            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4); /* Updated rgba for red */
+        }
+
+        .remove-btn:after {
+            background: linear-gradient(135deg, #FF7676, var(--red-btn)); /* Using red-btn variable */
+        }
+
+        /* Exams table */
+        .exams-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 2rem;
+            background-color: var(--table-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .exams-table th, .exams-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            color: var(--text-color);
+        }
+
+        @media (max-width: 768px) {
+            .exams-table th, .exams-table td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .exams-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+
+        .exams-table th {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .exams-table tr:nth-child(even) {
+            background-color: var(--table-even-bg);
+        }
+
+        .exams-table tr:hover {
+            background-color: rgba(255, 140, 0, 0.05); /* Updated primary color rgba */
+            transform: scale(1.01);
+        }
+
+        .exams-table tr {
+            transition: all 0.3s ease;
+        }
+
+        .action-btn {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            margin-right: 8px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .action-btn {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+                margin-right: 5px;
+                margin-bottom: 5px;
+            }
+        }
+
+        .edit-btn {
+            background: linear-gradient(135deg, var(--green-btn), #66BB6A); /* Using green-btn variable */
+            color: white;
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, var(--red-btn), #EF5350); /* Using red-btn variable */
+            color: white;
+        }
+
+        .view-btn {
+            background: linear-gradient(135deg, var(--blue-btn), #42A5F5); /* Using blue-btn variable */
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #9E9E9E, #BDBDBD);
+            box-shadow: 0 4px 15px rgba(158, 158, 158, 0.3);
+        }
+
+        .back-btn:hover {
+            box-shadow: 0 6px 20px rgba(158, 158, 158, 0.4);
+        }
+
+        .back-btn:after {
+            background: linear-gradient(135deg, #BDBDBD, #9E9E9E);
+        }
+
+        /* Animation effects */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.4); } /* Updated primary color rgba */
+            70% { box-shadow: 0 0 0 10px rgba(255, 140, 0, 0); } /* Updated primary color rgba */
+            100% { box-shadow: 0 0 0 0 rgba(255, 140, 0, 0); } /* Updated primary color rgba */
+        }
+
+        /* Question effects */
+        .question-enter {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        .question-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: all 0.3s ease;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+
+        /* Text effects */
+        .text-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Theme switch */
+        .theme-switch {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        @media (max-width: 480px) {
+            .theme-switch {
+                top: 15px;
+                right: 15px;
+            }
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        @media (max-width: 480px) {
+            .switch {
+                width: 50px;
+                height: 28px;
+            }
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 480px) {
+            .slider:before {
+                height: 20px;
+                width: 20px;
+            }
+        }
+
+        input:checked + .slider {
+            background-color: var(--green-btn); /* Updated to a green from the second design for dark mode toggle */
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        @media (max-width: 480px) {
+            input:checked + .slider:before {
+                transform: translateX(22px);
+            }
+        }
+
+        .slider:after {
+            content: "☀️";
+            position: absolute;
+            left: 5px;
+            top: 3px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 480px) {
+            .slider:after {
+                font-size: 12px;
+                top: 2px;
+            }
+        }
+
+        input:checked + .slider:after {
+            content: "🌙";
+            left: 35px;
+        }
+
+        @media (max-width: 480px) {
+            input:checked + .slider:after {
+                left: 28px;
+            }
+        }
+
+        /* Modal adjustments for mobile */
+        @media (max-width: 600px) {
+            .modal-content {
+                width: 95% !important;
+                padding: 1rem !important;
+            }
+        }
+
+        /* Action buttons container for mobile */
+        .actions-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 480px) {
+            .actions-container {
+                flex-direction: column;
+            }
+            .action-btn {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"></div>
+
+    <div class="theme-switch">
+        <label class="switch">
+            <input type="checkbox" id="themeToggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="container animate__animated animate__fadeIn">
+        <div id="examsListPage">
+            <h2 class="text-gradient" data-lang-key="yourExams">📚 Your Exams</h2>
+            <table class="exams-table">
+                <thead>
+                    <tr>
+                        <th data-lang-key="tableHeaderTitle">Title</th>
+                        <th data-lang-key="tableHeaderQuestions">Questions</th>
+                        <th data-lang-key="tableHeaderActions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="examsTableBody">
+                    </tbody>
+            </table>
+            <button type="button" class="btn pulse" onclick="showCreateForm()" data-lang-key="createNewExamButton">➕ Create New Exam</button>
+        </div>
+
+        <div id="examFormPage" class="hidden">
+            <h2 id="formTitle" class="text-gradient">✨ Create New Exam ✨</h2>
+            <label for="examTitle" data-lang-key="examTitleLabel">Exam Title:</label>
+            <input type="text" id="examTitle" placeholder="Enter exam title" data-lang-key="enterExamTitlePlaceholder" data-lang-placeholder-key="enterExamTitlePlaceholder">
+
+            <div id="questionsContainer"></div>
+            <button type="button" class="btn" onclick="addQuestion()" data-lang-key="addQuestionButton">+ Add Question</button>
+            <button type="button" class="btn pulse" onclick="saveExam()" data-lang-key="saveExamButton">💾 Save Exam</button>
+            <button type="button" class="btn back-btn" onclick="showExamsList()" data-lang-key="backToExamsListButton">← Back to Exams List</button>
+        </div>
+    </div>
+
+    <script src="language.js"></script>
+    <script>
+        let exams = JSON.parse(localStorage.getItem('exams')) || [];
+        let editIndex = null;
+
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+        // Check for saved theme preference or use system preference
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark' || (!currentTheme && prefersDarkScheme.matches)) {
+            document.body.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
+
+        themeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Progress bar effect
+        window.addEventListener('scroll', function() {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollProgress = (scrollTop / scrollHeight) * 100;
+            document.querySelector('.progress-bar').style.width = scrollProgress + '%';
+        });
+
+        // On page load, show exams list
+        window.onload = function() {
+            showExamsList();
+            document.querySelector('.container').classList.add('animate__fadeIn');
+        };
+
+        function addQuestion(data = null) {
+            const container = document.getElementById('questionsContainer');
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question fade-in';
+            
+            questionDiv.innerHTML = `
+                <label data-lang-key="questionLabel">Question:</label>
+                <input type="text" class="questionText" value="${data ? data.text : ''}" placeholder="" data-lang-key="enterQuestionTextPlaceholder" data-lang-placeholder-key="enterQuestionTextPlaceholder">
+                <label data-lang-key="optionALabel">Option A:</label>
+                <input type="text" class="optionA" value="${data ? data.options[0] : ''}" placeholder="" data-lang-key="optionA" data-lang-placeholder-key="optionA">
+                <label data-lang-key="optionBLabel">Option B:</label>
+                <input type="text" class="optionB" value="${data ? data.options[1] : ''}" placeholder="" data-lang-key="optionB" data-lang-placeholder-key="optionB">
+                <label data-lang-key="optionCLabel">Option C:</label>
+                <input type="text" class="optionC" value="${data ? data.options[2] : ''}" placeholder="" data-lang-key="optionC" data-lang-placeholder-key="optionC">
+                <label data-lang-key="optionDLabel">Option D:</label>
+                <input type="text" class="optionD" value="${data ? data.options[3] : ''}" placeholder="" data-lang-key="optionD" data-lang-placeholder-key="optionD">
+                <label data-lang-key="correctAnswerLabel">Correct Answer (A/B/C/D):</label>
+                <input type="text" class="correctAnswer" maxlength="1" value="${data ? data.correct : ''}" placeholder="" data-lang-key="correctOptionPlaceholder" data-lang-placeholder-key="correctOptionPlaceholder">
+                <button type="button" class="btn remove-btn" onclick="removeQuestion(this)" data-lang-key="removeQuestionButton">🗑️ Remove Question</button>
+            `;
+
+            // Apply translations to the newly added elements immediately
+            applyLanguage(localStorage.getItem('selectedLanguage') || 'en', questionDiv);
+
+            container.appendChild(questionDiv);
+            questionDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+
+        function removeQuestion(button) {
+            const questionDiv = button.parentElement;
+            questionDiv.style.transform = 'scale(0.9)';
+            questionDiv.style.opacity = '0';
+            setTimeout(() => {
+                questionDiv.remove();
+            }, 300);
+        }
+
+        function saveExam() {
+            const title = document.getElementById('examTitle').value.trim();
+            if (!title) {
+                alert(translations[localStorage.getItem('selectedLanguage') || 'en']['alertEnterExamTitle']);
+                document.getElementById('examTitle').focus();
+                return;
+            }
+
+            const questions = [...document.querySelectorAll('.question')].map(q => {
+                return {
+                    text: q.querySelector('.questionText').value.trim(),
+                    options: [
+                        q.querySelector('.optionA').value.trim(),
+                        q.querySelector('.optionB').value.trim(),
+                        q.querySelector('.optionC').value.trim(),
+                        q.querySelector('.optionD').value.trim()
+                    ],
+                    correct: q.querySelector('.correctAnswer').value.trim().toUpperCase()
+                };
+            });
+
+            if (questions.length === 0) {
+                alert(translations[localStorage.getItem('selectedLanguage') || 'en']['alertAddAtLeastOneQuestion']);
+                return;
+            }
+
+            const invalidQuestion = questions.find(q => 
+                !q.text || 
+                q.options.some(opt => !opt) || 
+                !['A','B','C','D'].includes(q.correct)
+            );
+
+            if (invalidQuestion) {
+                alert(translations[localStorage.getItem('selectedLanguage') || 'en']['alertFillAllFieldsCorrectly']);
+                return;
+            }
+
+            const newExam = { title, questions };
+            if (editIndex !== null) {
+                exams[editIndex] = newExam;
+            } else {
+                exams.push(newExam);
+            }
+
+            localStorage.setItem('exams', JSON.stringify(exams));
+            
+            // Save effect
+            document.querySelector('.container').classList.add('animate__pulse');
+            setTimeout(() => {
+                document.querySelector('.container').classList.remove('animate__pulse');
+                showExamsList();
+            }, 1000);
+        }
+
+        // Show exams list
+        function showExamsList() {
+            document.getElementById('examsListPage').classList.remove('hidden');
+            document.getElementById('examFormPage').classList.add('hidden');
+            
+            const tableBody = document.getElementById('examsTableBody');
+            tableBody.innerHTML = '';
+            
+            exams.forEach((exam, index) => {
+                const row = document.createElement('tr');
+                row.className = 'fade-in';
+                row.style.animationDelay = `${index * 0.1}s`;
+
+                const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+                const questionTextKey = exam.questions.length === 1 ? 'questionSingular' : 'questionPlural';
+                const questionCountText = translations[currentLang][questionTextKey];
+
+                row.innerHTML = `
+                    <td><strong>${exam.title}</strong></td>
+                    <td>${exam.questions.length} ${questionCountText}</td>
+                    <td>
+                        <div class="actions-container">
+                            <button class="action-btn edit-btn" onclick="editExam(${index})" data-lang-key="editButton">✏️ Edit</button>
+                            <button class="action-btn delete-btn" onclick="deleteExam(${index})" data-lang-key="deleteButton">🗑️ Delete</button>
+                            <button class="action-btn view-btn" onclick="viewExam(${index})" data-lang-key="viewButton">👁️ View</button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            // Apply language to newly created table rows
+            applyLanguage(localStorage.getItem('selectedLanguage') || 'en');
+        }
+
+        // Show create new exam form
+        function showCreateForm() {
+            document.getElementById('examsListPage').classList.add('hidden');
+            document.getElementById('examFormPage').classList.remove('hidden');
+            
+            const formTitleElement = document.getElementById('formTitle');
+            formTitleElement.textContent = translations[localStorage.getItem('selectedLanguage') || 'en']['createExamFormTitle'];
+            formTitleElement.classList.add('animate__rubberBand');
+            
+            // Clear form
+            document.getElementById('examTitle').value = '';
+            document.getElementById('questionsContainer').innerHTML = '';
+            editIndex = null;
+            
+            // Effects
+            setTimeout(() => {
+                formTitleElement.classList.remove('animate__rubberBand');
+            }, 1000);
+            
+            // Focus on title field
+            setTimeout(() => {
+                document.getElementById('examTitle').focus();
+            }, 200);
+        }
+
+        // Edit existing exam
+        function editExam(index) {
+            document.getElementById('examsListPage').classList.add('hidden');
+            document.getElementById('examFormPage').classList.remove('hidden');
+            
+            const formTitleElement = document.getElementById('formTitle');
+            formTitleElement.textContent = translations[localStorage.getItem('selectedLanguage') || 'en']['editExamFormTitle'];
+            formTitleElement.classList.add('animate__rubberBand');
+            
+            // Fill form with exam data
+            const exam = exams[index];
+            document.getElementById('examTitle').value = exam.title;
+            document.getElementById('questionsContainer').innerHTML = '';
+            exam.questions.forEach(q => addQuestion(q)); // addQuestion will apply language for each new question
+            
+            editIndex = index;
+            
+            // Effects
+            setTimeout(() => {
+                formTitleElement.classList.remove('animate__rubberBand');
+            }, 1000);
+        }
+
+        // Delete exam
+        function deleteExam(index) {
+            if (confirm(translations[localStorage.getItem('selectedLanguage') || 'en']['confirmDeleteExam'])) {
+                // Delete effect
+                const row = document.querySelector(`#examsTableBody tr:nth-child(${index + 1})`);
+                if (row) {
+                    row.style.transform = 'translateX(-100%)';
+                    row.style.opacity = '0';
+                    setTimeout(() => {
+                        exams.splice(index, 1);
+                        localStorage.setItem('exams', JSON.stringify(exams));
+                        showExamsList();
+                    }, 300);
+                } else {
+                    exams.splice(index, 1);
+                    localStorage.setItem('exams', JSON.stringify(exams));
+                    showExamsList();
+                }
+            }
+        }
+
+        // View exam details
+        function viewExam(index) {
+            const exam = exams[index];
+            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+            let questionsHtml = exam.questions.map((q, i) => `
+                <div style="margin-bottom: 15px; padding: 10px; border-bottom: 1px dashed var(--gray);">
+                    <h4 style="color: var(--primary); margin-bottom: 8px;" data-lang-key="modalQuestionPrefix">${translations[currentLang]['modalQuestionPrefix']} ${i+1}: ${q.text}</h4>
+                    <p style="margin: 5px 0; ${q.correct === 'A' ? 'font-weight: bold; color: var(--primary);' : ''}">A) ${q.options[0]}</p>
+                    <p style="margin: 5px 0; ${q.correct === 'B' ? 'font-weight: bold; color: var(--primary);' : ''}">B) ${q.options[1]}</p>
+                    <p style="margin: 5px 0; ${q.correct === 'C' ? 'font-weight: bold; color: var(--primary);' : ''}">C) ${q.options[2]}</p>
+                    <p style="margin: 5px 0; ${q.correct === 'D' ? 'font-weight: bold; color: var(--primary);' : ''}">D) ${q.options[3]}</p>
+                </div>
+            `).join('');
+            
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.8)';
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+            modal.style.zIndex = '1000';
+            modal.style.opacity = '0';
+            modal.style.transition = 'opacity 0.3s ease';
+            
+            modal.innerHTML = `
+                <div style="background: var(--container-bg); padding: 2rem; border-radius: 12px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative;">
+                    <h2 style="color: var(--primary); margin-bottom: 1rem; text-align: center;">${exam.title}</h2>
+                    <div>${questionsHtml}</div>
+                    <button style="position: absolute; top: 10px; right: 10px; background: var(--primary); color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer;" data-lang-key="modalCloseButton">✕</button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            setTimeout(() => { modal.style.opacity = '1'; }, 10);
+            
+            modal.querySelector('button').addEventListener('click', () => {
+                modal.style.opacity = '0';
+                setTimeout(() => modal.remove(), 300);
+            });
+
+            // Apply language to modal content after it's added to the DOM
+            applyLanguage(currentLang, modal);
+        }
+
+        // Initial application of language and listen for changes
+        document.addEventListener('DOMContentLoaded', () => {
+            applyLanguage(localStorage.getItem('selectedLanguage') || 'en');
+        });
+
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'selectedLanguage') {
+                applyLanguage(event.newValue);
+                // Re-render elements that depend on current language, like question/questions text
+                showExamsList();
+                // If on form page, update title
+                if (!document.getElementById('examFormPage').classList.contains('hidden')) {
+                    const formTitleElement = document.getElementById('formTitle');
+                    if (editIndex !== null) {
+                        formTitleElement.textContent = translations[event.newValue]['editExamFormTitle'];
+                    } else {
+                        formTitleElement.textContent = translations[event.newValue]['createExamFormTitle'];
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>

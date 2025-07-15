@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HTML Compiler</title>
+
+  <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@600&family=Lobster+Two:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+     <link href="css/style.css" rel="stylesheet">
+  <!-- CodeMirror -->
+  <link rel="stylesheet" href="codemirror/codemirror-5.65.19/lib/codemirror.css">
+  <script src="codemirror/codemirror-5.65.19/lib/codemirror.js"></script>
+  <script src="codemirror/codemirror-5.65.19/mode/clike/clike.js"></script>
+  <script src="codemirror/codemirror-5.65.19/mode/htmlmixed/htmlmixed.js"></script>
+  <script src="codemirror/codemirror-5.65.19/mode/css/css.js"></script>
+  <link rel="stylesheet" href="codemirror/codemirror-5.65.19/theme/dracula.css">
+  <script src="codemirror/codemirror-5.65.19/addon/edit/closebrackets.js"></script>
+
+
+  <style>
+    .tab {
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-bottom: 5px;
+    }
+    .tab.active {
+      background-color: #e0e0e0;
+      font-weight: bold;
+    }
+    .editor {
+      flex: 1;
+      display: none;
+    }
+    .editor.active {
+      display: block;
+    }
+    .editor-container {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+    }
+  </style>
+</head>
+<body class="bg-white">
+  <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
+       
+            <h1 class="m-0 text-primary"><i class="fa fa-book-reader me-3"></i>KiddoCode</h1>
+        
+        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav mx-auto" > 
+                <a class="nav-item nav-link custom-link" href="#">Slides</a>
+                <a class="nav-item nav-link custom-link" href="#">Videos</a>
+                <a class="nav-item nav-link custom-link" href="#">Games</a>
+                <a class="nav-item nav-link custom-link active" href="htmlCompiler.html">Compiler</a>
+                
+            </div>
+        </div>
+    </nav>
+  <div class="container mt-5">
+    <h2 class="mb-3">HTML Compiler</h2>
+    <button class="btn btn-primary mb-3 px-4 bi-play-fill" onclick="runCode()">Run</button>
+    <div class="tabs">
+      <button class="tab active" data-tab="html">index.html</button>
+      <button class="tab" data-tab="css">style.css</button>
+    </div>
+
+    <div class="container p-3 bg-dark d-flex mb-3">
+      <div class="d-flex justify-content-between w-100">
+        <div class="editor-container">
+          <div class="me-3 border editor html active" style="width: 50%;">
+            <textarea id="htmlEditor">
+<!-- Write your HTML code here -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Browser</title>
+  </head>
+  <body>
+    <h1>
+      Write, edit and run HTML, CSS and JavaScript code online.
+    </h1>
+    <p>
+      Our HTML editor updates the webview automatically in real-time as you write code.
+    </p>
+  </body>
+</html>
+            </textarea>
+          </div>
+
+          <div class="me-3 border editor css" style="width: 50%;">
+            <textarea id="cssEditor">
+body {
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+  padding: 20px;
+}
+h1 { color: #222; }
+p { color: #444; }</textarea>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-white">Output</h4>
+          <div class="flex-fill bg-white" style="height: 460px; width: 520px;">
+            <iframe id="preview" style="height: 460px; width: 520px;"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const editors = document.querySelectorAll('.editor');
+    const previewFrame = document.getElementById('preview');
+
+    tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    if (tab.classList.contains('active')) return;
+
+    // Switch active tab
+    document.querySelector('.tab.active').classList.remove('active');
+    tab.classList.add('active');
+
+    // Switch active editor
+    editors.forEach(editor => editor.classList.remove('active'));
+    document.querySelector(`.editor.${tab.dataset.tab}`).classList.add('active');
+
+    // Force CodeMirror to re-render when visible
+    if (tab.dataset.tab === "css") {
+      setTimeout(() => editor2.refresh(), 0);
+    } else if (tab.dataset.tab === "html") {
+      setTimeout(() => editor.refresh(), 0);
+    }
+  });
+});
+
+    
+  
+
+    // CodeMirror Setup
+    const editor = CodeMirror.fromTextArea(document.getElementById("htmlEditor"), {
+      mode: "htmlmixed",
+      theme: "dracula",
+      lineNumbers: true,
+      autoCloseBrackets: true
+    });
+
+    const editor2 = CodeMirror.fromTextArea(document.getElementById("cssEditor"), {
+      mode: "css",
+      theme: "dracula",
+      lineNumbers: true,
+      autoCloseBrackets: true
+    });
+
+    // Resize editors
+    const width = window.innerWidth;
+    editor.setSize(0.4 * width, "500");
+    editor2.setSize(0.4 * width, "500");
+
+    function updatePreview() {
+      const html = editor.getValue(); // From CodeMirror instance
+      const css = `<style>${editor2.getValue()}</style>`; // From CodeMirror instance
+      const previewContent = html.replace('</head>', `${css}</head>`);
+      const preview = previewFrame.contentDocument || previewFrame.contentWindow.document;
+      preview.open();
+      preview.write(previewContent);
+      preview.close();
+    }
+
+    editor.on("change", updatePreview);
+    editor2.on("change", updatePreview);
+    htmlEditor.addEventListener('input', updatePreview);
+    cssEditor.addEventListener('input', updatePreview);
+
+
+    function runCode() {
+      updatePreview();
+    }
+
+    window.onload = updatePreview;
+  </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>KiddoCode - Learning Programming Website</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@600&family=Lobster+Two:wght@700&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="css/bootstrap.min.css" rel="stylesheet" />
+  <link href="css/style.css" rel="stylesheet" />
+
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
+    <h1 class="m-0 text-primary">KiddoCode</h1>
+    <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <div class="navbar-nav mx-auto">
+        <a class="nav-item nav-link" href="#" onclick="showSection('slides')">Slides</a>
+        <a class="nav-item nav-link" href="#" onclick="showSection('games')">Games</a>
+        <a class="nav-item nav-link" href="#">Compiler</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main-content">
+    <div id="slides-container" class="section-container">
+      <h2 class="section-title">Educational Slides 📚</h2>
+      <div class="roadmap" id="roadmap">
+        <div class="lesson" onclick="openLesson(1)">Introduction To C#</div>
+        <div class="lesson locked">Print</div>
+        <div class="lesson locked">Variables</div>
+        <div class="lesson locked">Final Quiz</div>
+      </div>
+      <div id="lessonContainer">
+        <iframe id="lessonFrame" src=""></iframe>
+      </div>
+    </div>
+
+    <div id="games-container" class="section-container" style="display:none;">
+      <h2 class="section-title">Fun Coding Games 🎮</h2>
+      <p style="text-align: center;">Ready to play and learn? Choose a game below:</p>
+      
+    </div>
+
+    <div id="chat-container" class="section-container">
+      <h2 class="section-title">Ask the chatbot anything you want – it's here to help 💬</h2>
+      <div id="chat-box"></div>
+      <div id="chat-controls">
+        <input type="text" id="user-input" placeholder="Type your question here..." />
+        <button id="send-btn" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showSection(sectionId) {
+      const sections = {
+        slides: 'slides-container',
+        games: 'games-container'
+      };
+      for (let id in sections) {
+        const el = document.getElementById(sections[id]);
+        if (el) el.style.display = (id === sectionId) ? 'block' : 'none';
+      }
+    }
+
+    function openLesson(num) {
+      const geniallyLinks = {
+        
+      };
+      if (geniallyLinks[num]) {
+        document.getElementById('lessonFrame').src = geniallyLinks[num];
+        document.getElementById('roadmap').style.display = 'none';
+        document.getElementById('lessonContainer').style.display = 'block';
+      }
+    }
+
+    function closeLesson() {
+      document.getElementById('lessonFrame').src = '';
+      document.getElementById('lessonContainer').style.display = 'none';
+      document.getElementById('roadmap').style.display = 'flex';
+    }
+
+    async function sendMessage() {
+      const msg = document.getElementById("user-input").value;
+      if (!msg.trim()) return;
+
+      const chatBox = document.getElementById("chat-box");
+      chatBox.innerHTML += `<div class='chat-bubble-user'>${msg}</div>`;
+
+      const response = await fetch("https://geminichatbot-s0r7.onrender.com/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg })
+      });
+
+      const data = await response.json();
+      chatBox.innerHTML += `<div class='chat-bubble-bot'>${data.reply}</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+      document.getElementById("user-input").value = "";
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      showSection('slides');
+    });
+  </script>
+</body>
+</html>

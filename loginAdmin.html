@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awesome Kids Login!</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* --- CSS Start --- */
+        :root {
+            --primary-color: #FF8C00; /* Dark Orange */
+            --secondary-color: #FFD700; /* Gold */
+            --accent-color: #FF4500; /* Orange-Red */
+            --button-color: #3CB371; /* Medium Sea Green */
+            --button-hover-color: #2E8B57; /* Sea Green */
+            --input-border-color: #FFA07A; /* Light Salmon */
+            --input-bg-color: #FFF8DC; /* Cornsilk */
+            --label-color: #483D8B; /* Dark Slate Blue */
+            --message-error-color: #DC143C; /* Crimson */
+            --message-success-color: #3CB371; /* Medium Sea Green */
+            --container-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            font-family: 'Fredoka', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(to right bottom, var(--primary-color), var(--secondary-color));
+            overflow: hidden;
+            color: #333;
+            padding: 20px; /* Add some padding for smaller screens */
+            box-sizing: border-box; /* Include padding in element's total width and height */
+        }
+
+        .login-container {
+            background-color: var(--container-bg);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+            text-align: center;
+            width: 90%;
+            max-width: 450px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #FF7F50;
+            animation: fadeInScale 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        h1 {
+            color: var(--accent-color);
+            margin-bottom: 30px;
+            font-size: 3em;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
+            letter-spacing: 1px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--label-color);
+            font-weight: bold;
+            font-size: 1.2em;
+            text-transform: uppercase;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: calc(100% - 30px);
+            padding: 15px;
+            border: 2px solid var(--input-border-color);
+            border-radius: 15px;
+            font-size: 1.1em;
+            color: #333;
+            background-color: var(--input-bg-color);
+            transition: border-color 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #FF6347; /* Tomato on focus */
+            box-shadow: 0 0 15px rgba(255, 99, 71, 0.6);
+            background-color: #FFFFFF;
+            outline: none;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(20%);
+            cursor: pointer;
+            color: #A9A9A9;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: #6A5ACD;
+        }
+
+        /* Password Strength Indicator */
+        .password-strength-indicator {
+            height: 8px;
+            background-color: #eee;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+            position: relative;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .password-strength-indicator.show {
+            opacity: 1;
+        }
+        .password-strength-indicator div {
+            height: 100%;
+            width: 0%;
+            background-color: transparent;
+            transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+            border-radius: 4px;
+        }
+        .strength-weak { background-color: #FF6347; width: 33%; } /* Tomato */
+        .strength-medium { background-color: #FFD700; width: 66%; } /* Gold */
+        .strength-strong { background-color: #3CB371; width: 100%; } /* Medium Sea Green */
+
+
+        button {
+            background-color: var(--button-color);
+            color: white;
+            padding: 18px 35px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            background-color: var(--button-hover-color);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+            background-color: #228B22;
+            box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #message {
+            margin-top: 25px;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: var(--message-error-color);
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        #message.show {
+            opacity: 1;
+        }
+
+        /* --- Smart/Interactive Elements & Effects --- */
+
+        /* Bubble Animation Background */
+        @keyframes bubble {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1.2); opacity: 0; }
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -50px;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: bubble 15s infinite ease-in-out;
+            filter: blur(3px);
+            z-index: -1;
+        }
+
+        /* Confetti Effect (JS will add/remove this class) */
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 0; }
+            100% { transform: translateY(0) rotate(720deg); opacity: 1; }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: var(--confetti-color);
+            border-radius: 50%;
+            animation: confetti-fall 1.5s forwards ease-out;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Shake effect for errors */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-15px); }
+            40% { transform: translateX(15px); }
+            60% { transform: translateX(-15px); }
+            80% { transform: translateX(15px); }
+            100% { transform: translateX(0); }
+        }
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        /* --- Responsive Design (Media Queries) --- */
+
+        /* For smaller screens (e.g., phones) */
+        @media (max-width: 600px) {
+            .login-container {
+                padding: 25px; /* Less padding on smaller screens */
+                border-radius: 20px;
+            }
+
+            h1 {
+                font-size: 2.2em; /* Smaller heading */
+                margin-bottom: 20px;
+            }
+
+            label {
+                font-size: 1em; /* Smaller labels */
+            }
+
+            input[type="text"],
+            input[type="password"] {
+                padding: 12px; /* Less padding for inputs */
+                font-size: 1em;
+            }
+
+            .password-toggle {
+                right: 12px; /* Adjust icon position */
+                font-size: 1em;
+            }
+
+            button {
+                padding: 15px 25px; /* Smaller button */
+                font-size: 1.2em;
+                border-radius: 15px;
+            }
+
+            #message {
+                font-size: 1em; /* Smaller message font */
+            }
+        }
+
+        /* For very small screens (e.g., older phones) */
+        @media (max-width: 400px) {
+            .login-container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            input[type="text"],
+            input[type="password"] {
+                width: calc(100% - 24px); /* Adjust for smaller padding */
+                padding: 10px;
+            }
+            .password-toggle {
+                right: 10px;
+                transform: translateY(25%); /* Readjust if needed */
+            }
+            button {
+                font-size: 1.1em;
+            }
+        }
+
+        /* For larger screens (e.g., desktops, larger tablets) */
+        @media (min-width: 900px) {
+            .login-container {
+                padding: 50px;
+                max-width: 500px; /* Allow slightly wider on large screens */
+            }
+            h1 {
+                font-size: 3.5em;
+            }
+            label {
+                font-size: 1.3em;
+            }
+            input[type="text"],
+            input[type="password"] {
+                padding: 18px;
+                font-size: 1.2em;
+            }
+            button {
+                padding: 20px 40px;
+                font-size: 1.6em;
+            }
+        }
+        /* --- CSS End --- */
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Welcome, Hero!</h1>
+        <div class="input-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" placeholder="Enter your name here">
+        </div>
+        <div class="input-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Your secret password">
+            <span class="password-toggle" id="togglePassword">
+                <i class="fas fa-eye"></i>
+            </span>
+            <div class="password-strength-indicator" id="passwordStrength">
+                <div></div>
+            </div>
+        </div>
+        <button id="loginButton">Let's Go!</button>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        /* --- JavaScript Start --- */
+        document.addEventListener('DOMContentLoaded', () => {
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const loginButton = document.getElementById('loginButton');
+            const messageDisplay = document.getElementById('message');
+            const loginContainer = document.querySelector('.login-container');
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordStrengthIndicator = document.getElementById('passwordStrength');
+            const passwordStrengthBar = passwordStrengthIndicator.querySelector('div');
+
+            // --- Smart Feature 1: Dynamic Placeholder Text ---
+            usernameInput.addEventListener('focus', () => {
+                usernameInput.placeholder = 'Your unique name!';
+            });
+            usernameInput.addEventListener('blur', () => {
+                if (usernameInput.value === '') {
+                    usernameInput.placeholder = 'Don\'t forget your name!';
+                }
+            });
+
+            passwordInput.addEventListener('focus', () => {
+                passwordInput.placeholder = 'Your big secret here!';
+                passwordStrengthIndicator.classList.add('show'); // Show indicator on focus
+            });
+            passwordInput.addEventListener('blur', () => {
+                if (passwordInput.value === '') {
+                    passwordInput.placeholder = 'Don\'t forget your password!';
+                    passwordStrengthIndicator.classList.remove('show'); // Hide if empty on blur
+                }
+            });
+
+            // --- Smart Feature 2: Password Visibility Toggle (Eye Icon) ---
+            togglePassword.addEventListener('click', function () {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+
+            // --- Smart Feature 3: Password Strength Indicator ---
+            passwordInput.addEventListener('input', () => {
+                const password = passwordInput.value;
+                let strength = 0;
+
+                // Check for length
+                if (password.length >= 6) strength++;
+                // Check for numbers
+                if (/[0-9]/.test(password)) strength++;
+                // Check for mixed case or special characters
+                if (/[a-z]/.test(password) && /[A-Z]/.test(password) || /[^A-Za-z0-9]/.test(password)) strength++;
+
+                passwordStrengthBar.className = ''; // Clear previous classes
+                if (password.length === 0) {
+                    passwordStrengthIndicator.classList.remove('show');
+                } else {
+                    passwordStrengthIndicator.classList.add('show');
+                    if (strength === 1) {
+                        passwordStrengthBar.classList.add('strength-weak');
+                    } else if (strength === 2) {
+                        passwordStrengthBar.classList.add('strength-medium');
+                    } else if (strength >= 3) {
+                        passwordStrengthBar.classList.add('strength-strong');
+                    }
+                }
+            });
+
+            // --- Smart Feature 4: Basic Validation and Feedback ---
+            loginButton.addEventListener('click', () => {
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value.trim();
+
+                messageDisplay.classList.remove('show');
+                messageDisplay.style.color = 'var(--message-error-color)';
+
+                if (username === '' || password === '') {
+                    messageDisplay.textContent = 'Oops! All fields must be filled, brave one.';
+                    messageDisplay.classList.add('show');
+                    loginContainer.classList.add('shake');
+                    setTimeout(() => {
+                        loginContainer.classList.remove('shake');
+                    }, 500);
+                    return;
+                }
+
+                // --- Smart Feature 5: Simple "Correct" Credentials (for demo) ---
+                if (username.toLowerCase() === 'admin' && password === '1234') {
+                    messageDisplay.textContent = 'Excellent! Login successful!';
+                    messageDisplay.style.color = 'var(--message-success-color)';
+                    messageDisplay.classList.add('show');
+                    triggerConfetti();
+                    setTimeout(() => {
+                        // Redirect to Dashboard.html after a short delay
+                        window.location.href = 'Dashboard.html';
+                    }, 1500); // 1.5 seconds delay for confetti and message to show
+                } else {
+                    messageDisplay.textContent = 'Sorry, incorrect username or password.';
+                    messageDisplay.classList.add('show');
+                    loginContainer.classList.add('shake');
+                    setTimeout(() => {
+                        loginContainer.classList.remove('shake');
+                    }, 500);
+                }
+            });
+
+            // --- Beautiful Effect 1: Background Bubbles ---
+            function createBubble() {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                const size = Math.random() * 70 + 30;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.animationDuration = `${Math.random() * 12 + 8}s`;
+                bubble.style.animationDelay = `${Math.random() * 5}s`;
+                document.body.appendChild(bubble);
+
+                bubble.addEventListener('animationend', () => {
+                    bubble.remove();
+                });
+            }
+
+            setInterval(createBubble, 700);
+
+            // --- Beautiful Effect 2: Confetti on Successful Login ---
+            function triggerConfetti() {
+                const colors = ['#FFD700', '#FF6347', '#3CB371', '#4169E1', '#8A2BE2', '#FF1493', '#00CED1', '#FFA500'];
+                const numConfetti = 70;
+
+                for (let i = 0; i < numConfetti; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    confetti.style.setProperty('--confetti-color', colors[Math.floor(Math.random() * colors.length)]);
+
+                    const buttonRect = loginButton.getBoundingClientRect();
+                    confetti.style.left = `${buttonRect.left + (Math.random() * buttonRect.width) - 10}px`;
+                    confetti.style.top = `${buttonRect.top + (Math.random() * buttonRect.height) - 10}px`;
+
+                    document.body.appendChild(confetti);
+
+                    confetti.animate([
+                        { transform: `translateY(${Math.random() * -250 - 50}px) translateX(${Math.random() * 250 - 125}px) rotate(${Math.random() * 360}deg)`, opacity: 1 },
+                        { transform: `translateY(${window.innerHeight}px) translateX(${Math.random() * 250 - 125}px) rotate(${720 + Math.random() * 360}deg)`, opacity: 0 }
+                    ], {
+                        duration: Math.random() * 2500 + 1500,
+                        easing: 'ease-out',
+                        delay: Math.random() * 700
+                    }).onfinish = () => confetti.remove();
+                }
+            }
+        });
+        /* --- JavaScript End --- */
+    </script>
+</body>
+</html>

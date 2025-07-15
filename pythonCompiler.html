@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pyhton Compiler</title>
+
+  <!-- Google Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@600&family=Lobster+Two:wght@700&display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet"/>
+
+  <!-- Bootstrap and Libraries -->
+  <link href="css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="lib/animate/animate.min.css" rel="stylesheet"/>
+  <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- CodeMirror Styles -->
+  <link rel="stylesheet" href="codemirror/codemirror-5.65.19/lib/codemirror.css">
+  <script src="codemirror/codemirror-5.65.19/lib/codemirror.js"></script>
+  <script src="codemirror/codemirror-5.65.19/mode/clike/clike.js"></script>
+  <link rel="stylesheet" href="codemirror/codemirror-5.65.19/theme/dracula.css">
+  <script src="codemirror/codemirror-5.65.19/addon/edit/closebrackets.js"></script>
+
+</head>
+<body class="bg-white">
+  <div class="container mt-5">
+    <h2 class="mb-3">Python Compiler</h2>
+    <button class="btn btn-success mb-3 px-4 bi-play-fill" onclick="runCode()">Run</button>
+    <div class="container p-3 bg-primary d-flex mb-3">
+      <div class="d-flex justify-content-between">
+        <div class="me-3 border " style="width: 50%;">
+          <textarea id="pythonEditor">
+#write your Python code here....
+print("Hello, World!")
+          </textarea>
+        </div>
+        <div>
+          <h4 class="text-white">Output</h4>
+          <div class="flex-fill bg-white" style="height: 460px; width: 520px;">
+          <iframe id="preview" style="height: 460px; width: 520px;"></iframe>
+        </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+<script>
+  const htmlEditor = document.getElementById('htmlEditor');
+  const cssEditor = document.getElementById('cssEditor');
+  const previewFrame = document.getElementById('preview');
+
+  function getLineNumber(text, errorMessage) {
+    const lines = text.split('\n');
+    for (let i = 0; i < lines.length; i++) {
+      if (errorMessage.includes(lines[i].trim())) {
+        return i + 1;
+      }
+    }
+    return '?';
+  }
+
+  function updatePreview() {
+    const html = htmlEditor.value;
+    const css = cssEditor.value;
+
+    try {
+      const fullHtml = `
+        <html>
+          <head>
+            <style>${css}</style>
+          </head>
+          <body>
+            ${html}
+          </body>
+        </html>
+      `;
+
+      const previewDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+      previewDoc.open();
+      previewDoc.write(fullHtml);
+      previewDoc.close();
+    } catch (e) {
+      const errorLine = getLineNumber(html, e.message);
+      const previewDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+      previewDoc.open();
+      previewDoc.write(`<pre style="color:red;">Error at line ${errorLine}: ${e.message}</pre>`);
+      previewDoc.close();
+    }
+  }
+
+  htmlEditor.addEventListener('input', updatePreview);
+  cssEditor.addEventListener('input', updatePreview);
+  window.onload = updatePreview;
+</script>
+
+  <script>
+    // Initialize CodeMirror on the textarea with id "editor"
+    const editor = CodeMirror.fromTextArea(document.getElementById("htmlEditor"), {
+      mode: "htmlmixed",
+      tags: {
+        style: [
+          ["type", /^text\/(x-)?scss$/, "text/x-scss"],
+          [null, null, "css"]
+        ],
+      custom: [
+        [null, null, "customMode"]
+      ]
+    },
+      theme: "dracula",
+      lineNumbers: true,
+      autoCloseBrackets: true
+    });
+    var width = window.innerWidth
+    editor.setSize(0.4*width,"500")
+    function runCode() {
+      // Get the code from CodeMirror (not the textarea)
+      const html = editor.getValue();
+      document.getElementById("preview").srcdoc = html;
+    }
+  </script>
+  
+</body>
+</html>
